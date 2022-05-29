@@ -1,0 +1,5 @@
+payload:
+  # at least one rule exists
+  - DOMAIN-SUFFIX,renzhe.cloud
+  - DOMAIN-SUFFIX,renzhesub.com
+  - DOMAIN-SUFFIX,mql5.com

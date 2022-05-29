@@ -1,0 +1,7 @@
+payload:
+  # at least one rule exists
+  - DOMAIN,hub5btmain.v6.shub.sandai.net
+  - DOMAIN,hub5emu.v6.shub.sandai.net
+  - DOMAIN,hub5btmain.v6.shub.sandai.net
+  - DOMAIN-KEYWORD,.ad.,REJECT
+  - DOMAIN,union.click.jd.com
