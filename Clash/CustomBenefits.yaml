@@ -1,4 +1,6 @@
 payload:
+  # VIP Netflix
+  - DOMAIN-SUFFIX,netflix.com
   
   # VIP Pornhub
   - DOMAIN-SUFFIX,pornhubpremium.com
