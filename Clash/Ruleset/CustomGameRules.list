@@ -1,0 +1,11 @@
+# Xbox Live and Cloud Savings
+DOMAIN,westus.tts.speech.microsoft.com
+DOMAIN,ocsp.msocsp.com
+DOMAIN,DB8C6.playfabapi.com
+DOMAIN-SUFFIX,playfabapi.com
+
+# MapleStory
+DOMAIN-SUFFIX,maplestory.gamania.com
+DOMAIN-SUFFIX,hackshield.beanfun.com
+DOMAIN-SUFFIX,nexon.com
+IP-CIDR,202.80.104.0/24

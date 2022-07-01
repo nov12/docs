@@ -1,14 +1,14 @@
 payload:
-  # VIP Netflix
+  # Netflix
   - DOMAIN-SUFFIX,netflix.com
   
-  # VIP Pornhub
+  # Pornhub Premium
   - DOMAIN-SUFFIX,pornhubpremium.com
   # Pornhub Premium download
   - DOMAIN,ed.phprcdn.com
   - DOMAIN,cd.phprcdn.com
   
-  # VIP Disney+
+  # Disney+
   - DOMAIN-SUFFIX,disneyplus.com
   - DOMAIN-SUFFIX,disney-plus.net
   - DOMAIN-SUFFIX,disneystreaming.com

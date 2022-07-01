@@ -1,0 +1,9 @@
+# ps游戏下载域名
+DOMAIN,gs2.ww.prod.dl.playstation.net
+
+# xbox游戏下载域名
+DOMAIN,assets1.xboxlive.com
+DOMAIN,assets2.xboxlive.com
+
+# Ricequant
+DOMAIN-SUFFIX,ricequant.com
