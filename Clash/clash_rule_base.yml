@@ -31,8 +31,8 @@ secret: ''
 tun:
   enable: true
   stack: system # or gvisor
-  macOS-auto-route: true
-  macOS-auto-detect-interface: true
+  auto-route: true
+  auto-detect-interface: true
 
 # DNS server settings
 # This section is optional. When not present, the DNS server will be disabled.
