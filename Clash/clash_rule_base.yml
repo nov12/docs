@@ -29,7 +29,7 @@ secret: ''
 # ipv6: false
 
 tun:
-  enable: true
+  enable: false
   stack: system # or gvisor
   auto-route: true
   auto-detect-interface: true
