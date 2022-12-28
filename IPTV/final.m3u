@@ -23,7 +23,7 @@ rtp://224.168.45.226:8000
 #EXTINF:-1 tvg-id="12" tvg-name="CCTV11" tvg-logo="http://120.205.32.238:8080/iptvepg/images/markurl/mark_1606966230621.png" group-title="央视",CCTV-11高清
 rtp://224.168.47.15:8000
 #EXTINF:-1 tvg-id="13" tvg-name="CCTV12" tvg-logo="http://120.205.32.238:8080/iptvepg/images/markurl/mark_1606966260890.png" group-title="央视",CCTV-12高清
-rtp://224.168.45.227:8958
+rtp://224.168.45.227:8000
 #EXTINF:-1 tvg-id="14" tvg-name="CCTV13" tvg-logo="http://120.205.32.238:8080/iptvepg/images/markurl/mark_1606965716050.png" group-title="央视",CCTV-13高清
 rtp://224.168.47.46:8000
 #EXTINF:-1 tvg-id="15" tvg-name="CCTV14" tvg-logo="http://120.205.32.238:8080/iptvepg/images/markurl/mark_1606966334970.png" group-title="央视",CCTV-14高清
