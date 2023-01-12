@@ -28,3 +28,4 @@ payload:
   
   # Emby
   - DOMAIN-SUFFIX,misty.ltd
+  - DOMAIN-SUFFIX,poloemby.xyz
