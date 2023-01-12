@@ -24,7 +24,7 @@ payload:
   # Pornhub
   - DOMAIN-SUFFIX,phprcdn.com
   - DOMAIN-SUFFIX,pornhub.com
-  - DOMAIN-SUFFIX,pornhubpremium.#
+  - DOMAIN-SUFFIX,pornhubpremium.com
   
   # Emby
   - DOMAIN-SUFFIX,misty.ltd
