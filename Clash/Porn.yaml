@@ -29,3 +29,5 @@ payload:
   # Emby
   - DOMAIN-SUFFIX,misty.ltd
   - DOMAIN-SUFFIX,poloemby.xyz
+  - DOMAIN,cf2.misakaf.org
+  - DOMAIN,4837.misakaf.org
