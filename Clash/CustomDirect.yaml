@@ -11,3 +11,7 @@ payload:
 
   # Ricequant
   - DOMAIN-SUFFIX,ricequant.com
+  
+  # EMBY
+  - DOMAIN,hd1.slyk.net
+  - DOMAIN,embyvip.misakaf.org
