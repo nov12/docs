@@ -15,3 +15,4 @@ payload:
   # EMBY
   - DOMAIN,hd1.slyk.net
   - DOMAIN,embyvip.misakaf.org
+  - DOMAIN-SUFFIX,datetype.net
