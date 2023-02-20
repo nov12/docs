@@ -1,0 +1,35 @@
+# Xbox Live and Cloud Savings
+DOMAIN,profile.xboxlive.com
+DOMAIN,rta.xboxlive.com
+DOMAIN,gameserverds.xboxlive.com
+DOMAIN,sessiondirectory.xboxlive.com
+DOMAIN,social.xboxlive.com
+DOMAIN,notify.xboxlive.com
+DOMAIN,xnotify.xboxlive.com
+DOMAIN,userpresence.xboxlive.com
+DOMAIN,images-eds-ssl.xboxlive.com
+DOMAIN,peoplehub.xboxlive.com
+DOMAIN,achievements.xboxlive.com
+DOMAIN,privacy.xboxlive.com
+DOMAIN,titlestorage.xboxlive.com
+DOMAIN,title.mgt.xboxlive.com
+DOMAIN,sisu.xboxlive.com
+DOMAIN,westus.tts.speech.microsoft.com
+DOMAIN,ocsp.msocsp.com
+DOMAIN,DB8C6.playfabapi.com
+DOMAIN-SUFFIX,playfabapi.com
+DOMAIN-SUFFIX,auth.xboxlive.com
+
+# Sony
+# https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Sony.list
+DOMAIN-SUFFIX,playstation.com
+DOMAIN-SUFFIX,playstation.net
+DOMAIN-SUFFIX,playstationnetwork.com
+DOMAIN-SUFFIX,sony.com
+DOMAIN-SUFFIX,sonyentertainmentnetwork.com
+
+# MapleStory
+DOMAIN-SUFFIX,maplestory.gamania.com
+DOMAIN-SUFFIX,hackshield.beanfun.com
+DOMAIN-SUFFIX,nexon.com
+IP-CIDR,202.80.104.0/24
