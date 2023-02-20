@@ -1,0 +1,36 @@
+# url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Ruleset/Porn.list
+DOMAIN-KEYWORD,porn
+DOMAIN-SUFFIX,8teenxxx.com
+DOMAIN-SUFFIX,ahcdn.com
+DOMAIN-SUFFIX,bcvcdn.com
+DOMAIN-SUFFIX,bongacams.com
+DOMAIN-SUFFIX,chaturbate.com
+DOMAIN-SUFFIX,dditscdn.com
+DOMAIN-SUFFIX,livejasmin.com
+DOMAIN-SUFFIX,phncdn.com
+DOMAIN-SUFFIX,rdtcdn.com
+DOMAIN-SUFFIX,redtube.com
+DOMAIN-SUFFIX,sb-cd.com
+DOMAIN-SUFFIX,spankbang.com
+DOMAIN-SUFFIX,t66y.com
+DOMAIN-SUFFIX,xhamster.com
+DOMAIN-SUFFIX,xnxx-cdn.com
+DOMAIN-SUFFIX,xnxx.com
+DOMAIN-SUFFIX,xvideos-cdn.com
+DOMAIN-SUFFIX,xvideos.com
+DOMAIN-SUFFIX,ypncdn.com
+
+
+# Pornhub
+DOMAIN-SUFFIX,phprcdn.com
+DOMAIN-SUFFIX,pornhub.com
+DOMAIN-SUFFIX,pornhubpremium.com
+
+# Emby
+DOMAIN-SUFFIX,misty.ltd
+DOMAIN-SUFFIX,poloemby.xyz
+DOMAIN,cf2.misakaf.org
+DOMAIN,4837.misakaf.org
+
+# Other
+DOMAIN-SUFFIX,jable.tv
