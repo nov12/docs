@@ -41,6 +41,7 @@ dns:
   listen: 0.0.0.0:53
   ipv6: true
   enhanced-mode: redir-host
+  fake-ip-range: 198.18.0.1/16
   default-nameserver:
     - 114.114.114.114
     - 8.8.8.8
@@ -60,7 +61,15 @@ dns:
     - tls://8.8.8.8:853
     # - tls://8.8.4.4:853
   fallback-filter:
-    geoip: true                  # default
+    geoip: true # default
     geoip-code: CN
-    ipcidr:                      # ips in these subnets will be considered polluted
+    ipcidr: # ips in these subnets will be considered polluted
       - 240.0.0.0/4
+      - 0.0.0.0/32
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+    - "*.*.*.*.srv.nintendo.net"
+    - "*.*.*.stun.playstation.net"
+    - "xbox.*.microsoft.com"
+    - "*.*.*.xboxlive.com"
