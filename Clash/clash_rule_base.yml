@@ -23,7 +23,7 @@ mode: rule
 # 5 个级别：silent / info / warning / error / debug。级别越高日志输出量越大，越倾向于调试，若需要请自行开启。
 log-level: error
 # Clash 的 RESTful API
-external-controller: '0.0.0.0:9090'
+external-controller: ':9090'
 
 # RESTful API 的口令
 secret: '@_@' 
