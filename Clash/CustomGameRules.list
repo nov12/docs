@@ -33,3 +33,7 @@ DOMAIN-SUFFIX,maplestory.gamania.com
 DOMAIN-SUFFIX,hackshield.beanfun.com
 DOMAIN-SUFFIX,nexon.com
 IP-CIDR,202.80.104.0/24
+
+# MapleRoyals
+IP-CIDR,185.217.95.21/32
+IP-CIDR,135.125.4.87/32
