@@ -16,7 +16,7 @@ fi
 while true; do
     read -p "Do you want to overwrite the ssh key file? [Y/n] " yn
     case $yn in
-        [Yy]* | "" ) cat keys > ~/.ssh/authorized_keys; break;;
+        [Yy]* | "" ) cat keys > ~/.ssh/authorized_keys; rm keys; break;;
         [Nn]* ) cat keys >> ~/.ssh/authorized_keys; break;;
         * ) echo "Please answer [Y]es or [N]o, [Y/n]";;
     esac
@@ -50,7 +50,7 @@ while true; do
     read -p "Do you want to change the current user's password? [Y/n] " yn
     case $yn in
         [Yy]* | "" ) 
-            new_password=$(tr -dc 'a-zA-Z0-9!@#$%^&*()-+=' < /dev/urandom | fold -w 12 | head -n 1)
+            new_password=$(tr -dc 'a-zA-Z0-9!@#$%^&*()-+=' < /dev/urandom | fold -w 16 | head -n 1)
             echo -e "$USER:$new_password" | sudo chpasswd
             echo -e "Your new password is: \033[31m$new_password\033[0m. Please save it."
             break;;
