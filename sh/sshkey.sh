@@ -26,7 +26,7 @@ done
 while true; do
     read -p "Do you want to disable ssh password login? [Y/n] " yn
     case $yn in
-        [Yy]* | "" ) sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config; break;;
+        [Yy]* | "" ) sudo sed -i 's/^#\?\(PasswordAuthentication yes\)/PasswordAuthentication no/g' /etc/ssh/sshd_config; break;;
         [Nn]* ) break;;
         * ) echo "Please answer [Y]es or [N]o, [Y/n]";;
     esac
