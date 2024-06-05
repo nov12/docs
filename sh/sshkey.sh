@@ -61,3 +61,5 @@ done
 
 sudo service ssh restart
 echo "SSH key has been updated successfully."
+
+rm -- "$0"
