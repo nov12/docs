@@ -1,0 +1,14 @@
+[DEFAULT]
+bantime.increment = true
+bantime.rndtime = 3600
+bantime.factor = 1
+bantime.formula = ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)
+bantime.multipliers = 1 5 30 60 300 720 1440 2880
+
+bantime  = 60m
+findtime  = 14400m
+maxretry = 3
+
+[sshd]
+#backend=systemd
+enabled = true
