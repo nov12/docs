@@ -1,4 +1,5 @@
 [DEFAULT]
+banaction = ufw
 bantime.increment = true
 bantime.rndtime = 3600
 bantime.factor = 1
@@ -10,5 +11,5 @@ findtime  = 14400m
 maxretry = 3
 
 [sshd]
-#backend=systemd
+backend=systemd
 enabled = true
