@@ -23,4 +23,8 @@ DOMAIN,us-vk-2.micu.hk
 DOMAIN,hk-ba.micu.hk
 DOMAIN-SUFFIX,datetype.net
 
+# iTunes Store 和 App Store 的 CDN
 DOMAIN,iosapps.itunes.apple.com
+
+# LocalAreaNetwork
+DOMAIN-SUFFIX,internal
