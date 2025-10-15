@@ -59,6 +59,59 @@ while true; do
     esac
 done
 
+# Create new user workflow
+while true; do
+    read -p "Please enter the new username to create (leave blank and press Enter to skip creating): " newuser
+    if [ -z "$newuser" ]; then
+        echo "No username entered, skipping new user workflow."
+        break
+    fi
+
+    # Check if user already exists
+    if id "$newuser" &>/dev/null; then
+        echo "User $newuser already exists, please choose another username."
+        continue
+    fi
+
+    # Create user and add to sudo group
+    sudo useradd -m -s /bin/bash -G sudo "$newuser"
+    if [ $? -ne 0 ]; then
+        echo "Failed to create user."
+        break
+    fi
+
+    # Generate a random simple password (letters and numbers, length 12)
+    newpass=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c12)
+    echo "$newuser:$newpass" | sudo chpasswd
+
+    # Show the password in red
+    echo -e "The password for new user $newuser is: \033[31m$newpass\033[0m. Please keep it safe!"
+
+    # Create .ssh directory and authorized_keys for the new user
+    sudo -u "$newuser" mkdir -p /home/"$newuser"/.ssh
+    sudo cp ~/.ssh/authorized_keys /home/"$newuser"/.ssh/authorized_keys
+    sudo chown -R "$newuser":"$newuser" /home/"$newuser"/.ssh
+    sudo chmod 700 /home/"$newuser"/.ssh
+    sudo chmod 600 /home/"$newuser"/.ssh/authorized_keys
+
+    # Ask whether to lock the user password
+    while true; do
+        read -p "Do you want to lock the password for this user (only allow SSH key login)? [Y/n] " yn
+        case $yn in
+            [Yy]* | "" )
+                sudo passwd -l "$newuser"
+                echo "Password for $newuser has been locked."
+                break;;
+            [Nn]* )
+                echo "Password for $newuser is not locked."
+                break;;
+            * ) echo "Please answer [Y]es or [N]o, [Y/n]";;
+        esac
+    done
+
+    break
+done
+
 sudo service ssh restart
 echo "SSH key has been updated successfully."
 
