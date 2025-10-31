@@ -52,7 +52,7 @@ while true; do
         [Yy]* | "" ) 
             new_password=$(tr -dc 'a-zA-Z0-9!@#$%^&*()-+=' < /dev/urandom | fold -w 16 | head -n 1)
             echo -e "$USER:$new_password" | sudo chpasswd
-            echo -e "Your new password is: \033[31m$new_password\033[0m. Please save it."
+            echo -e "Your account $USER new password is: \033[31m$new_password\033[0m. Please save it."
             break;;
         [Nn]* ) break;;
         * ) echo "Please answer [Y]es or [N]o, [Y/n]";;
