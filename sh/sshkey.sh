@@ -115,4 +115,5 @@ done
 sudo service ssh restart
 echo "SSH key has been updated successfully."
 
-rm -- "$0"
+rm -- "$0" 2>/dev/null || true
+
