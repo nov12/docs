@@ -24,6 +24,7 @@ DOMAIN,us-vk-2.micu.hk
 DOMAIN,hk-ba.micu.hk
 DOMAIN-SUFFIX,datetype.net
 DOMAIN-SUFFIX,bmhyk.vip
+DOMAIN-SUFFIX,syemby.com
 
 # iTunes Store 和 App Store 的 CDN
 DOMAIN,iosapps.itunes.apple.com
