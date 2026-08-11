@@ -34,6 +34,11 @@ DOMAIN-SUFFIX,hackshield.beanfun.com
 DOMAIN-SUFFIX,nexon.com
 IP-CIDR,202.80.104.0/24
 
+# MapleStory
+DOMAIN-SUFFIX,signin.nexon.com
+DOMAIN-SUFFIX,mverse-api.nexon.com
+DOMAIN-SUFFIX,public.api.nexon.com
+
 # MapleRoyals
 IP-CIDR,185.217.95.21/32
 IP-CIDR,135.125.4.87/32
