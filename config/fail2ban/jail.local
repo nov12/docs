@@ -1,15 +1,35 @@
 [DEFAULT]
-banaction = ufw
-bantime.increment = true
-bantime.rndtime = 3600
-bantime.factor = 1
-bantime.formula = ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)
-bantime.multipliers = 1 5 30 60 300 720 1440 2880
 
-bantime  = 60m
-findtime  = 14400m
+# 使用 UFW
+banaction = ufw
+
+# 本机和 Tailscale 网段永不封禁
+ignoreip = 127.0.0.1/8 ::1 100.64.0.0/10
+
+# 第一次封禁 1 小时
+bantime = 1h
+
+# 重复违规逐渐延长封禁
+bantime.increment = true
+
+# 随机增加最多 30 分钟，避免准确预测解封时间
+bantime.rndtime = 30m
+
+# 递增：1h → 6h → 1d → 3d → 7d → 30d → 90d → 180d
+bantime.multipliers = 1 6 24 72 168 720 2160 4320
+
+# 10 分钟内失败 3 次就封禁
+findtime = 10m
 maxretry = 3
 
+
 [sshd]
-backend = systemd
+
+# 启用 SSH 防护
 enabled = true
+
+# 从 systemd journal 读取 SSH 日志
+backend = systemd
+
+# 检测更多异常 SSH 行为
+mode = aggressive
