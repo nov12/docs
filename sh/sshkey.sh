@@ -274,11 +274,11 @@ configure_sshd() {
     local file_backup
     local tmp
     local i
+    local effective_ports=""
     local listening_ports=""
+    local ssh_service=""
     local -a port_files=()
     local -a port_backups=()
-    local -a effective_ports=()
-    local -a effective_listen_ports=()
 
     if ask "Disable SSH password authentication?"; then
         disable_password=1
@@ -459,65 +459,37 @@ configure_sshd() {
     fi
 
     if (( change_port )); then
-
-        mapfile -t effective_ports < <(
+        effective_ports="$(
             awk '$1 == "port" { print $2 }' <<< "${effective}" |
                 sort -u
-        )
+        )"
 
-        # Port 必须只有一个，而且必须等于用户指定的新端口。
-        if (( ${#effective_ports[@]} != 1 )) ||
-           [[ "${effective_ports[0]:-}" != "${ssh_port}" ]]; then
-
+        # 必须只有新端口；无端口或多个端口都会与 ${ssh_port} 不相等。
+        if [[ "${effective_ports}" != "${ssh_port}" ]]; then
             warn "Unexpected effective Port configuration:"
             awk '$1 == "port" { print "  " $0 }' <<< "${effective}" >&2
 
             restore_sshd
             die "The old SSH port is still effective. The previous configuration has been restored."
         fi
-
-        mapfile -t effective_listen_ports < <(
-            awk '$1 == "listenaddress" {
-                address = $2
-                sub(/^.*:/, "", address)
-                print address
-            }' <<< "${effective}" |
-                sort -u
-        )
-
-        # ListenAddress 可以显式携带端口，因此也必须确认它没有留下旧端口。
-        if (( ${#effective_listen_ports[@]} != 1 )) ||
-           [[ "${effective_listen_ports[0]:-}" != "${ssh_port}" ]]; then
-
-            warn "Unexpected effective ListenAddress configuration:"
-            awk '$1 == "listenaddress" { print "  " $0 }' <<< "${effective}" >&2
-
-            restore_sshd
-            die "An SSH ListenAddress is still using another port. The previous configuration has been restored."
-        fi
     fi
 
     if "${SUDO[@]}" systemctl is-active --quiet ssh.service; then
-
-        if ! "${SUDO[@]}" systemctl reload ssh.service; then
-            restore_sshd
-            die "Failed to reload the SSH service. The previous configuration has been restored."
-        fi
-
+        ssh_service="ssh.service"
     elif "${SUDO[@]}" systemctl is-active --quiet sshd.service; then
-
-        if ! "${SUDO[@]}" systemctl reload sshd.service; then
-            restore_sshd
-            die "Failed to reload the SSH service. The previous configuration has been restored."
-        fi
-
+        ssh_service="sshd.service"
     else
         restore_sshd
         die "No running SSH service was found. The previous configuration has been restored."
     fi
 
-    # sshd -T 验证的是配置；ss 验证的是实际监听状态。
-    # 这一步可以发现 systemd unit 参数、显式 ListenAddress 等导致的端口偏差。
+    if ! "${SUDO[@]}" systemctl reload "${ssh_service}"; then
+        restore_sshd
+        die "Failed to reload the SSH service. The previous configuration has been restored."
+    fi
+
+    # sshd -T 验证配置中的 Port；ss 验证最终实际监听状态。
+    # 后者也会发现 ListenAddress、启动参数等导致的端口偏差。
     if (( change_port )); then
         listening_ports="$(
             "${SUDO[@]}" ss -lntpH |
