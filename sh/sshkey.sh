@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+
 #
 # sshkey.sh
 #
@@ -270,6 +270,15 @@ configure_sshd() {
     local backup=""
     local old_exists=0
     local effective
+    local file
+    local file_backup
+    local tmp
+    local i
+    local listening_ports=""
+    local -a port_files=()
+    local -a port_backups=()
+    local -a effective_ports=()
+    local -a effective_listen_ports=()
 
     if ask "Disable SSH password authentication?"; then
         disable_password=1
@@ -282,6 +291,9 @@ configure_sshd() {
             warn "To avoid incorrect changes, this script will not modify ssh.socket automatically."
             die "Please handle ssh.socket manually before changing the SSH port."
         fi
+
+        command -v ss >/dev/null ||
+            die "The ss command is required to verify the actual SSH listening port."
 
         while true; do
             read -r -p "Enter the new SSH port [1024-65535]: " ssh_port
@@ -324,42 +336,100 @@ configure_sshd() {
         fi
     } > "${new_config}"
 
+    # 备份脚本自己管理的 drop-in。
     if [[ -f "${SSHD_DROPIN}" ]]; then
         backup="$(mktemp)"
-
-        # 只备份内容，避免 sudo cp -a 改变临时文件所有权
         "${SUDO[@]}" cat "${SSHD_DROPIN}" > "${backup}"
-
         old_exists=1
     fi
 
-    "${SUDO[@]}" install \
-        -m 644 \
-        -o root \
-        -g root \
-        "${new_config}" \
-        "${SSHD_DROPIN}"
+    # 修改端口时，只处理 Debian/Ubuntu 的标准 SSH 配置位置：
+    #   /etc/ssh/sshd_config
+    #   /etc/ssh/sshd_config.d/*.conf
+    # 非标准 Include 不在这里递归修改；后面的 sshd -T 会负责兜底检测。
+    if (( change_port )); then
 
-    rm -f "${new_config}"
+        for file in "${SSHD_CONFIG}" "${SSHD_DROPIN_DIR}"/*.conf; do
+            [[ -f "${file}" ]] || continue
+
+            # 这个文件稍后会被完整覆盖，不需要重复处理。
+            [[ "${file}" == "${SSHD_DROPIN}" ]] && continue
+
+            if "${SUDO[@]}" grep -Eiq \
+                '^[[:space:]]*[Pp][Oo][Rr][Tt][[:space:]]+' \
+                "${file}"; then
+
+                file_backup="$(mktemp)"
+                "${SUDO[@]}" cat "${file}" > "${file_backup}"
+
+                port_files+=("${file}")
+                port_backups+=("${file_backup}")
+            fi
+        done
+    fi
 
     restore_sshd() {
         warn "Restoring the previous SSH configuration..."
 
+        # 恢复被本脚本注释掉的旧 Port 指令。
+        for i in "${!port_files[@]}"; do
+            cat "${port_backups[$i]}" |
+                "${SUDO[@]}" tee "${port_files[$i]}" >/dev/null || true
+        done
+
+        # 恢复脚本自己的 drop-in。
         if (( old_exists )); then
             "${SUDO[@]}" install \
                 -m 644 \
                 -o root \
                 -g root \
                 "${backup}" \
-                "${SSHD_DROPIN}"
+                "${SSHD_DROPIN}" || true
         else
-            "${SUDO[@]}" rm -f "${SSHD_DROPIN}"
+            "${SUDO[@]}" rm -f "${SSHD_DROPIN}" || true
         fi
 
         "${SUDO[@]}" systemctl reload ssh.service 2>/dev/null ||
         "${SUDO[@]}" systemctl reload sshd.service 2>/dev/null ||
         true
     }
+
+    # 如果要更换端口，先禁用标准配置位置中的所有旧 Port 指令。
+    # 这样新的 Port 不是“追加”，而是成为标准配置中的唯一 Port。
+    if (( change_port )); then
+
+        for file in "${port_files[@]}"; do
+            tmp="$(mktemp)"
+
+            "${SUDO[@]}" sed -E \
+                's/^([[:space:]]*)([Pp][Oo][Rr][Tt][[:space:]]+)/\1# disabled by sshkey.sh: \2/' \
+                "${file}" > "${tmp}"
+
+            if ! cat "${tmp}" |
+                 "${SUDO[@]}" tee "${file}" >/dev/null; then
+                rm -f "${tmp}"
+                restore_sshd
+                die "Failed to disable the old SSH Port directive. The previous configuration has been restored."
+            fi
+
+            rm -f "${tmp}"
+            info "Disabled the old SSH Port directive in ${file}"
+        done
+    fi
+
+    if ! "${SUDO[@]}" install \
+        -m 644 \
+        -o root \
+        -g root \
+        "${new_config}" \
+        "${SSHD_DROPIN}"; then
+
+        rm -f "${new_config}"
+        restore_sshd
+        die "Failed to install the SSH configuration. The previous configuration has been restored."
+    fi
+
+    rm -f "${new_config}"
 
     info "Validating the SSH configuration..."
 
@@ -390,9 +460,40 @@ configure_sshd() {
 
     if (( change_port )); then
 
-        if ! grep -qx "port ${ssh_port}" <<< "${effective}"; then
+        mapfile -t effective_ports < <(
+            awk '$1 == "port" { print $2 }' <<< "${effective}" |
+                sort -u
+        )
+
+        # Port 必须只有一个，而且必须等于用户指定的新端口。
+        if (( ${#effective_ports[@]} != 1 )) ||
+           [[ "${effective_ports[0]:-}" != "${ssh_port}" ]]; then
+
+            warn "Unexpected effective Port configuration:"
+            awk '$1 == "port" { print "  " $0 }' <<< "${effective}" >&2
+
             restore_sshd
-            die "SSH port ${ssh_port} did not take effect. The previous configuration has been restored."
+            die "The old SSH port is still effective. The previous configuration has been restored."
+        fi
+
+        mapfile -t effective_listen_ports < <(
+            awk '$1 == "listenaddress" {
+                address = $2
+                sub(/^.*:/, "", address)
+                print address
+            }' <<< "${effective}" |
+                sort -u
+        )
+
+        # ListenAddress 可以显式携带端口，因此也必须确认它没有留下旧端口。
+        if (( ${#effective_listen_ports[@]} != 1 )) ||
+           [[ "${effective_listen_ports[0]:-}" != "${ssh_port}" ]]; then
+
+            warn "Unexpected effective ListenAddress configuration:"
+            awk '$1 == "listenaddress" { print "  " $0 }' <<< "${effective}" >&2
+
+            restore_sshd
+            die "An SSH ListenAddress is still using another port. The previous configuration has been restored."
         fi
     fi
 
@@ -415,13 +516,45 @@ configure_sshd() {
         die "No running SSH service was found. The previous configuration has been restored."
     fi
 
+    # sshd -T 验证的是配置；ss 验证的是实际监听状态。
+    # 这一步可以发现 systemd unit 参数、显式 ListenAddress 等导致的端口偏差。
+    if (( change_port )); then
+        listening_ports="$(
+            "${SUDO[@]}" ss -lntpH |
+                awk '/"sshd"/ {
+                    address = $4
+                    sub(/^.*:/, "", address)
+                    if (address ~ /^[0-9]+$/) {
+                        print address
+                    }
+                }' |
+                sort -nu
+        )"
+
+        if [[ "${listening_ports}" != "${ssh_port}" ]]; then
+            warn "Unexpected SSH listening port(s):"
+            if [[ -n "${listening_ports}" ]]; then
+                printf '  %s\n' "${listening_ports}" >&2
+            else
+                warn "No sshd listening socket was detected."
+            fi
+
+            restore_sshd
+            die "SSH is not listening exclusively on port ${ssh_port}. The previous configuration has been restored."
+        fi
+    fi
+
     rm -f "${backup:-}"
+    for file_backup in "${port_backups[@]}"; do
+        rm -f "${file_backup}"
+    done
 
     info "SSH service configuration was applied successfully."
 
     if (( change_port )); then
         echo
-        warn "The SSH port has been changed to ${ssh_port}."
+        warn "The SSH port has been replaced with ${ssh_port}."
+        warn "The effective SSH configuration and actual listening socket were both verified."
         warn "Make sure your firewall, cloud security group, and related rules allow TCP ${ssh_port}."
         warn "Do not close the current SSH session. Test the new connection from another terminal first."
         echo
