@@ -2,31 +2,34 @@
 
 set -e
 
-# ============================================================
-# 通用 GitHub Release 安装器
-#
-# 用法：
-#   gh-install owner/repo
-#   gh-install owner/repo binary_name
-#   gh-install https://github.com/owner/repo
-#   gh-install
-#
-# 示例：
-#   gh-install zellij-org/zellij
-#   gh-install BurntSushi/ripgrep rg
-#   gh-install https://github.com/zellij-org/zellij
-#
-# 环境变量：
-#   INSTALL_DIR=/usr/local/bin
-#
-# 功能：
-#   - 支持 owner/repo 或 GitHub 仓库链接
-#   - 无参数时交互输入仓库
-#   - 自动检测系统和 CPU 架构
-#   - 多个 Release 文件时上下键选择
-#   - 支持 GitHub URL 前缀代理
-#   - 已安装程序自动覆盖更新
-# ============================================================
+cat <<'EOF'
+============================================================
+通用 GitHub Release 安装器
+
+用法：
+  gh-install owner/repo
+  gh-install owner/repo binary_name
+  gh-install https://github.com/owner/repo
+  gh-install
+
+示例：
+  gh-install zellij-org/zellij
+  gh-install BurntSushi/ripgrep rg
+  gh-install https://github.com/zellij-org/zellij
+
+环境变量：
+  INSTALL_DIR=/usr/local/bin
+
+功能：
+  - 支持 owner/repo 或 GitHub 仓库链接
+  - 无参数时交互输入仓库
+  - 自动检测系统和 CPU 架构
+  - 多个 Release 文件时上下键选择
+  - 支持 GitHub URL 前缀代理
+  - 已安装程序自动覆盖更新
+============================================================
+
+EOF
 
 
 # ------------------------------------------------------------
@@ -42,6 +45,9 @@ tmp_dir="$(mktemp -d)"
 proxy_list=(
     "Direct GitHub|"
     "gh-proxy.com|https://gh-proxy.com/"
+    "akams.cn|https://github.akams.cn/"
+    "ghproxy.net|https://ghproxy.net/"
+    "homeboyc.cn|https://ghproxy.homeboyc.cn/"
     "Custom proxy|CUSTOM"
 )
 
