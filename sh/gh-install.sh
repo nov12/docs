@@ -2,34 +2,27 @@
 
 set -e
 
-cat <<'EOF'
-============================================================
-通用 GitHub Release 安装器
-
-用法：
-  gh-install owner/repo
-  gh-install owner/repo binary_name
-  gh-install https://github.com/owner/repo
-  gh-install
-
-示例：
-  gh-install zellij-org/zellij
-  gh-install BurntSushi/ripgrep rg
-  gh-install https://github.com/zellij-org/zellij
-
-环境变量：
-  INSTALL_DIR=/usr/local/bin
-
-功能：
-  - 支持 owner/repo 或 GitHub 仓库链接
-  - 无参数时交互输入仓库
-  - 自动检测系统和 CPU 架构
-  - 多个 Release 文件时上下键选择
-  - 支持 GitHub URL 前缀代理
-  - 已安装程序自动覆盖更新
-============================================================
-
-EOF
+show_header() {
+    printf '%s\n' \
+    '============================================================' \
+    '通用 GitHub Release 安装器' \
+    '' \
+    '用法：' \
+    '  gh-install owner/repo' \
+    '  gh-install owner/repo binary_name' \
+    '  gh-install https://github.com/owner/repo' \
+    '  gh-install' \
+    '' \
+    '示例：' \
+    '  gh-install zellij-org/zellij' \
+    '  gh-install BurntSushi/ripgrep rg' \
+    '  gh-install https://github.com/zellij-org/zellij' \
+    '' \
+    '环境变量：' \
+    '  INSTALL_DIR=/usr/local/bin' \
+    '============================================================' \
+    ''
+}
 
 
 # ------------------------------------------------------------
@@ -53,8 +46,6 @@ proxy_list=(
 
 trap 'rm -rf "$tmp_dir"' EXIT
 
-echo "GitHub Release Installer"
-
 
 # ------------------------------------------------------------
 # 上下键选择菜单
@@ -70,6 +61,7 @@ menu() {
 
     while true; do
         printf "\033[2J\033[H"
+        show_header
         echo "$title"
         echo
 
@@ -118,6 +110,8 @@ proxy="${proxy_list[$MENU_RESULT]#*|}"
 
 if [[ "$proxy" == "CUSTOM" ]]; then
     printf "\033[2J\033[H"
+    show_header
+    
     read -rp "Proxy prefix: " proxy
 fi
 
@@ -146,6 +140,7 @@ binary_name="${2:-}"
 
 if [[ -z "$repo" ]]; then
     printf "\033[2J\033[H"
+    show_header
     read -rp "GitHub repository (owner/repo or URL): " repo
 
     if [[ -z "$repo" ]]; then
