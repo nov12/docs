@@ -29,7 +29,8 @@ umask 077
 # ============================================================
 
 GITHUB_USER="${GITHUB_USER:-nov12}"
-KEYS_URL="https://github.com/${GITHUB_USER}.keys"
+# KEYS_URL="https://github.com/${GITHUB_USER}.keys"
+KEYS_URL="https://github.com/nov12/docs/raw/refs/heads/main/config/shell/ssh.keys"
 
 SSHD_CONFIG="/etc/ssh/sshd_config"
 SSHD_DROPIN_DIR="/etc/ssh/sshd_config.d"
